@@ -6,12 +6,12 @@ import $ from 'jquery';
 import React from 'react';
 import {FormattedMessage} from 'react-intl';
 
+import WebSocketClient from 'mattermost-redux/client/websocket_client';
+
 import * as GlobalActions from 'actions/global_actions.jsx';
 import * as WebrtcActions from 'actions/webrtc_actions.jsx';
 import UserStore from 'stores/user_store.jsx';
 import WebrtcStore from 'stores/webrtc_store.jsx';
-
-import WebSocketClient from 'client/web_websocket_client.jsx';
 
 import {Constants, WebrtcActionTypes} from 'utils/constants.jsx';
 import * as Utils from 'utils/utils.jsx';

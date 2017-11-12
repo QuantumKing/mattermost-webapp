@@ -8,6 +8,8 @@ import {getPostThread} from 'mattermost-redux/actions/posts';
 import {removeUserFromTeam} from 'mattermost-redux/actions/teams';
 import {Client4} from 'mattermost-redux/client';
 
+import WebSocketClient from 'mattermost-redux/client/websocket_client';
+
 import {loadChannelsForCurrentUser} from 'actions/channel_actions.jsx';
 import {trackEvent} from 'actions/diagnostics_actions.jsx';
 import {handleNewPost} from 'actions/post_actions.jsx';
@@ -22,8 +24,6 @@ import store from 'stores/redux_store.jsx';
 import SearchStore from 'stores/search_store.jsx';
 import TeamStore from 'stores/team_store.jsx';
 import UserStore from 'stores/user_store.jsx';
-
-import WebSocketClient from 'client/web_websocket_client.jsx';
 
 import {ActionTypes, Constants, ErrorPageTypes} from 'utils/constants.jsx';
 import EventTypes from 'utils/event_types.jsx';

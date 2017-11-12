@@ -11,7 +11,7 @@ import {getChannelAndMyMember, getChannelStats, viewChannel} from 'mattermost-re
 import {setServerVersion} from 'mattermost-redux/actions/general';
 import {getPosts, getProfilesAndStatusesForPosts} from 'mattermost-redux/actions/posts';
 import * as TeamActions from 'mattermost-redux/actions/teams';
-import {Client4} from 'mattermost-redux/client';
+import * as WebSocketActions from 'mattermost-redux/actions/websocket';
 
 import {loadChannelsForCurrentUser} from 'actions/channel_actions.jsx';
 import * as GlobalActions from 'actions/global_actions.jsx';
@@ -27,7 +27,6 @@ import store from 'stores/redux_store.jsx';
 import TeamStore from 'stores/team_store.jsx';
 import UserStore from 'stores/user_store.jsx';
 
-import WebSocketClient from 'client/web_websocket_client.jsx';
 import {loadPlugin, loadPluginsIfNecessary, removePlugin} from 'plugins';
 
 import {ActionTypes, Constants, ErrorBarTypes, Preferences, SocketEvents, UserStatuses} from 'utils/constants.jsx';
@@ -46,36 +45,13 @@ export function initialize() {
         return;
     }
 
-    let connUrl = getSiteURL();
+    const siteUrl = getSiteURL();
 
-    // replace the protocol with a websocket one
-    if (connUrl.startsWith('https:')) {
-        connUrl = connUrl.replace(/^https:/, 'wss:');
-    } else {
-        connUrl = connUrl.replace(/^http:/, 'ws:');
-    }
-
-    // append a port number if one isn't already specified
-    if (!(/:\d+$/).test(connUrl)) {
-        if (connUrl.startsWith('wss:')) {
-            connUrl += ':' + global.window.mm_config.WebsocketSecurePort;
-        } else {
-            connUrl += ':' + global.window.mm_config.WebsocketPort;
-        }
-    }
-
-    connUrl += Client4.getUrlVersion() + '/websocket';
-
-    WebSocketClient.setEventCallback(handleEvent);
-    WebSocketClient.setFirstConnectCallback(handleFirstConnect);
-    WebSocketClient.setReconnectCallback(() => reconnect(false));
-    WebSocketClient.setMissedEventCallback(() => reconnect(false));
-    WebSocketClient.setCloseCallback(handleClose);
-    WebSocketClient.initialize(connUrl);
+    dispatch(WebSocketActions.init('chrome', siteUrl));
 }
 
 export function close() {
-    WebSocketClient.close();
+    dispatch(WebSocketActions.close());
 }
 
 function reconnectWebSocket() {
